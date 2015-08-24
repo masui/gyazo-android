@@ -5,3 +5,6 @@ Gyazo Android
 [![Try it on your device via DeployGate](https://dply.me/q2bx89/button/small)](https://dply.me/q2bx89#install)
 
 Gyazo for Android prototype implementation
+
+(forked from tnj/gyazo-android)
+

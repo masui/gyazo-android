@@ -100,7 +100,7 @@ public class ImageUploadService extends IntentService {
     private String upload(final Uri uri) throws IOException {
         OkHttpClient client = new OkHttpClient();
 
-        String id = loadGyazoId();
+        String id = loadGyazoId(); // (もしあれば)プレファレンスDBからGyazoIDを取得
         String type = getContentResolver().getType(uri);
         File file = ensureFileFromContentUri(uri);
 
@@ -108,7 +108,7 @@ public class ImageUploadService extends IntentService {
                 .type(MultipartBuilder.FORM)
                 .addPart(
                         Headers.of("Content-Disposition", "form-data; name=\"id\""),
-                        RequestBody.create(null, id)
+                        RequestBody.create(null, id) // GyazoIDを指定してアップロードすればそのアカウントのとこに追加される
                 )
                 .addPart(
                         Headers.of("Content-Disposition", "form-data; name=\"imagedata\"; filename=\"gyazo.com\""),
@@ -126,7 +126,7 @@ public class ImageUploadService extends IntentService {
         if (response.isSuccessful()) {
             String url = response.body().string();
 
-            id = response.header("X-Gyazo-Id");
+            id = response.header("X-Gyazo-Id"); // GyazoIDが返ってきた場合はPreferenceにセーブしておく。ID指定してアップロードしたときはヌルが返るような
             if (!TextUtils.isEmpty(id))
                 saveGyazoId(id);
 
@@ -152,7 +152,7 @@ public class ImageUploadService extends IntentService {
     }
 
     @Nullable
-    private File ensureFileFromContentUri(Uri uri) {
+    private File ensureFileFromContentUri(Uri uri) { // ファイルを読み出せるまで何度もトライ (圧縮が終わってない可能性があるから?)
         File file;
         int retry = WAIT_FOR_SAVE_COMPLETION_SECONDS;
         do {

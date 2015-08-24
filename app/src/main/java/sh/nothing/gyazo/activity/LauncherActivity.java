@@ -1,3 +1,6 @@
+//
+// アプリ起動したとき動くactivity
+//
 package sh.nothing.gyazo.activity;
 
 import android.app.Activity;
@@ -17,7 +20,7 @@ import sh.nothing.gyazo.service.ImageUploadService;
 public class LauncherActivity extends Activity {
 
     private static final String SCREENSHOTS_DIR_NAME = "Screenshots";
-    private static final long RECENT_THREASHOLD_MILLIS = 60000L;
+    private static final long RECENT_THREASHOLD_MILLIS = 60000L;       // この時間以内に起動されたらGyazoにアップロード
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,7 @@ public class LauncherActivity extends Activity {
         startActivity(new Intent(this, MainActivity.class));
     }
 
-    private void uploadScreenshot(Uri target) {
+    private void uploadScreenshot(Uri target) { // ImageUploadServiceにアップロード依頼
         Intent i = new Intent(this, ImageUploadService.class);
         i.setData(target);
         startService(i);
@@ -68,7 +71,7 @@ public class LauncherActivity extends Activity {
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
-                    if (System.currentTimeMillis() - RECENT_THREASHOLD_MILLIS < cursor.getLong(1))
+                    if (System.currentTimeMillis() - RECENT_THREASHOLD_MILLIS < cursor.getLong(1)) // コラム1に時刻が入ってるのか?
                         return ContentUris.withAppendedId(
                                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                                 cursor.getLong(0));

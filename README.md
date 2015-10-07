@@ -6,5 +6,7 @@ Gyazo Android
 
 Gyazo for Android prototype implementation
 
+スクショをGyazo.comにアップロードするアプリ
+
 (forked from tnj/gyazo-android)
 
